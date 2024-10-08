@@ -5,7 +5,7 @@ import string
 
 # Función para generar un enlace único (hipervínculo)
 def generar_enlace():
-    base_url = "https://tuapp.streamlit.app/"  # Reemplaza con la URL de tu app en Streamlit Cloud
+    base_url = "https://https://valeryhugohalloween2024.streamlit.app/"  # Reemplaza con la URL de tu app en Streamlit Cloud
     enlace_unico = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
     return base_url + "?encuesta=" + enlace_unico
 
