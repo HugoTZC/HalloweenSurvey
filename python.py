@@ -53,7 +53,7 @@ if st.session_state['pagina_actual'] == 'generar':
         st.session_state.opciones = []
 
     # Botón para agregar opciones dinámicamente
-    if st.button("Agregar opción"):
+    if st.button("Agregar opción", key="add_option"):
         st.session_state.opciones.append(f"Opción {len(st.session_state.opciones) + 1}")
 
     # Mostrar las opciones en una tabla
@@ -62,16 +62,15 @@ if st.session_state['pagina_actual'] == 'generar':
         st.table(df_opciones)
 
     # Eliminar última opción
-    if st.button("Eliminar última opción"):
+    if st.button("Eliminar última opción", key="delete_option"):
         if st.session_state.opciones:
             st.session_state.opciones.pop()
 
     # Generar enlace de la encuesta
-    if st.button("Generar encuesta"):
+    if st.button("Generar encuesta", key="generate_survey"):
         if st.session_state.opciones:
             enlace_id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
             guardar_encuesta(enlace_id, title, description, st.session_state.opciones, bg_color)
-
             enlace_encuesta = generar_enlace(enlace_id)
             st.success(f"Encuesta '{title}' creada exitosamente.")
             st.write(f"Encuesta disponible en: [Haz clic aquí para contestar]({enlace_encuesta})")
@@ -80,24 +79,20 @@ if st.session_state['pagina_actual'] == 'generar':
 
 elif st.session_state['pagina_actual'] == 'encuestas_creadas':
     st.title("Encuestas creadas")
-
+    st.write("Aquí aparecerán las encuestas creadas.")
+    
     # Mostrar las encuestas guardadas
     encuestas = [f.split(".")[0] for f in os.listdir() if f.endswith(".json")]
     if encuestas:
         encuesta_seleccionada = st.selectbox("Selecciona una encuesta para ver los resultados:", encuestas)
         if encuesta_seleccionada:
             st.write(f"Resultados de la encuesta: {encuesta_seleccionada}")
-            
-            # Cargar la encuesta seleccionada y mostrar sus resultados
+            # Cargar la encuesta y mostrar sus resultados
             with open(f"{encuesta_seleccionada}.json", "r") as f:
                 encuesta_data = json.load(f)
-                total_votos = sum(encuesta_data["votos"].values())
-                
-                if total_votos > 0:
-                    for opcion, votos in encuesta_data["votos"].items():
-                        porcentaje = (votos / total_votos * 100) if total_votos > 0 else 0
-                        st.write(f"{opcion}: {porcentaje:.2f}% ({votos} votos)")
-                else:
-                    st.write("Aún no hay votos en esta encuesta.")
+                total_votos = sum(encuesta_data.get("votos", {}).values())
+                for opcion, votos in encuesta_data.get("votos", {}).items():
+                    porcentaje = (votos / total_votos * 100) if total_votos > 0 else 0
+                    st.write(f"{opcion}: {porcentaje:.2f}% ({votos} votos)")
     else:
         st.write("No se han creado encuestas.")
