@@ -14,6 +14,11 @@ def cargar_encuesta(enlace_id):
             return json.load(f)
     return None
 
+# Función para guardar votos
+def guardar_votos(enlace_id, encuesta_data):
+    with open(f"{enlace_id}.json", "w") as f:
+        json.dump(encuesta_data, f)
+
 # Verificar si el archivo de la encuesta existe y cargar los datos
 encuesta_data = cargar_encuesta(encuesta_id)
 
@@ -39,6 +44,11 @@ if encuesta_data:
     
     # Botón para enviar la respuesta
     if st.button("Enviar respuesta"):
+        if 'votos' not in encuesta_data:
+            encuesta_data['votos'] = {opcion: 0 for opcion in encuesta_data['opciones']}
+        
+        encuesta_data['votos'][seleccion] += 1
+        guardar_votos(encuesta_id, encuesta_data)
         st.success("Respuesta enviada con éxito.")
 else:
     st.error("No se encontró la encuesta o los datos han expirado.")
