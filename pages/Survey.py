@@ -1,13 +1,29 @@
 import streamlit as st
+import json
+import os
 
-# Verificar si los datos de la encuesta están almacenados en el estado
-if 'opciones' in st.session_state:
+# Leer los parámetros de la URL
+query_params = st.experimental_get_query_params()
+encuesta_id = query_params.get('encuesta', [''])[0]
+
+# Función para cargar encuesta desde archivo JSON
+def cargar_encuesta(enlace_id):
+    file_name = f"{enlace_id}.json"
+    if os.path.exists(file_name):
+        with open(file_name, "r") as f:
+            return json.load(f)
+    return None
+
+# Verificar si el archivo de la encuesta existe y cargar los datos
+encuesta_data = cargar_encuesta(encuesta_id)
+
+if encuesta_data:
     # Aplicar el color de fondo de la encuesta
     st.markdown(
         f"""
         <style>
         .stApp {{
-            background-color: {st.session_state.color_fondo_encuesta};
+            background-color: {encuesta_data['color_fondo']};
         }}
         </style>
         """,
@@ -15,11 +31,11 @@ if 'opciones' in st.session_state:
     )
     
     # Mostrar la encuesta
-    st.title(st.session_state.titulo_encuesta)
-    st.write(st.session_state.descripcion_encuesta)
+    st.title(encuesta_data['titulo'])
+    st.write(encuesta_data['descripcion'])
     
     # Mostrar las opciones de la encuesta
-    seleccion = st.radio("Elige una opción:", st.session_state.opciones)
+    seleccion = st.radio("Elige una opción:", encuesta_data['opciones'])
     
     # Botón para enviar la respuesta
     if st.button("Enviar respuesta"):
