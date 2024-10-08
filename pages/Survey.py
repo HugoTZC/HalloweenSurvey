@@ -44,7 +44,8 @@ if encuesta_data:
         st.error("Esta encuesta ya está cerrada. No se puede votar.")
     elif st.session_state.voto_realizado:
         # Redirigir a la página de "Gracias" si ya votó
-        st.experimental_rerun("https://valeryhugohalloween2024.streamlit.app/Thanks")
+        st.experimental_set_query_params(page="thanks")
+        st.stop()
     else:
         # Mostrar la encuesta
         st.title(encuesta_data['titulo'])
@@ -65,12 +66,7 @@ if encuesta_data:
             st.session_state.voto_realizado = True
             
             # Redirigir a la página de "Gracias"
-            st.experimental_rerun("https://valeryhugohalloween2024.streamlit.app/Thanks")
-        
-        # Botón para cerrar la encuesta
-        if st.button("Cerrar encuesta"):
-            encuesta_data["cerrada"] = True
-            guardar_encuesta(encuesta_id, encuesta_data)
-            st.success("La encuesta ha sido cerrada. Ya no se puede votar.")
+            st.experimental_set_query_params(page="thanks")
+            st.stop()
 else:
     st.error("No se encontró la encuesta o los datos han expirado.")
