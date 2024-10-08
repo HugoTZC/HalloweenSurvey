@@ -4,9 +4,9 @@ import random
 import string
 
 # Función para generar un enlace único
-def generar_enlace(enlace_id):
-    base_url = "https://tuapp.streamlit.app/survey"  # Reemplaza con la URL de tu app en Streamlit Cloud
-    return f"{base_url}?encuesta={enlace_id}"
+def generar_enlace():
+    base_url = "https://valeryhugohalloween2024.streamlit.app//Survey"  # Enlace actualizado para la página Survey
+    return base_url
 
 # Variables de estado para opciones dinámicas
 if 'opciones' not in st.session_state:
@@ -55,13 +55,12 @@ if st.button("Generar encuesta"):
     if st.session_state.opciones:
         st.success(f"Encuesta '{title}' creada exitosamente.")
         
-        enlace_encuesta = generar_enlace(st.session_state.enlace_id)
-        
         # Guardar en el estado los datos para la encuesta
         st.session_state.titulo_encuesta = title
         st.session_state.descripcion_encuesta = description
         st.session_state.color_fondo_encuesta = bg_color
         
+        enlace_encuesta = generar_enlace()
         st.write(f"Encuesta disponible en: [Haz clic aquí para contestar]({enlace_encuesta})")
     else:
         st.error("Debes agregar al menos una opción para generar la encuesta.")

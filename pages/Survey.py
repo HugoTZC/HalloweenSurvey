@@ -1,11 +1,7 @@
 import streamlit as st
 
-# Leer los parámetros de la URL
-query_params = st.experimental_get_query_params()
-encuesta_id = query_params.get('encuesta', [''])[0]
-
 # Verificar si los datos de la encuesta están almacenados en el estado
-if encuesta_id and 'opciones' in st.session_state and st.session_state.enlace_id == encuesta_id:
+if 'opciones' in st.session_state:
     # Aplicar el color de fondo de la encuesta
     st.markdown(
         f"""
