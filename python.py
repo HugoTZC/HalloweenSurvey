@@ -6,7 +6,7 @@ import json
 
 # Función para generar un enlace único
 def generar_enlace(enlace_id):
-    base_url = "https://tuapp.streamlit.app/Survey"  # Enlace actualizado para la página Survey
+    base_url = "https://valeryhugohalloween2024.streamlit.app/Survey"  # Tu enlace de la app
     return f"{base_url}?encuesta={enlace_id}"
 
 # Función para guardar encuesta en archivo JSON
