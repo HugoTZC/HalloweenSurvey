@@ -3,15 +3,16 @@ import pandas as pd
 import random
 import string
 
-# Función para generar un enlace único (hipervínculo)
-def generar_enlace():
-    base_url = "https://valeryhugohalloween2024.streamlit.app/"  # Reemplaza con la URL de tu app en Streamlit Cloud
-    enlace_unico = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
-    return base_url + "?encuesta=" + enlace_unico
+# Función para generar un enlace único
+def generar_enlace(enlace_id):
+    base_url = "https://tuapp.streamlit.app/survey"  # Reemplaza con la URL de tu app en Streamlit Cloud
+    return f"{base_url}?encuesta={enlace_id}"
 
 # Variables de estado para opciones dinámicas
 if 'opciones' not in st.session_state:
     st.session_state.opciones = []
+if 'enlace_id' not in st.session_state:
+    st.session_state.enlace_id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
 
 # Establecer color de fondo de la página principal a negro
 st.markdown(
@@ -53,23 +54,14 @@ if st.button("Eliminar última opción"):
 if st.button("Generar encuesta"):
     if st.session_state.opciones:
         st.success(f"Encuesta '{title}' creada exitosamente.")
-        enlace_encuesta = generar_enlace()
+        
+        enlace_encuesta = generar_enlace(st.session_state.enlace_id)
+        
+        # Guardar en el estado los datos para la encuesta
+        st.session_state.titulo_encuesta = title
+        st.session_state.descripcion_encuesta = description
+        st.session_state.color_fondo_encuesta = bg_color
+        
         st.write(f"Encuesta disponible en: [Haz clic aquí para contestar]({enlace_encuesta})")
-
-        # Aplicar el color de fondo personalizado solo a la sección de la encuesta
-        st.markdown(
-            f"""
-            <style>
-            .stApp {{
-                background-color: black;
-                color: white;
-            }}
-            .reportview-container {{
-                background-color: {bg_color};
-            }}
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
     else:
         st.error("Debes agregar al menos una opción para generar la encuesta.")
